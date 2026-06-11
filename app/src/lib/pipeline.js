@@ -1,5 +1,3 @@
-// The pipeline stages shown (and animated) on the landing page.
-// Kept as plain data so it can be unit-tested without rendering React.
 export const PIPELINE_STEPS = [
   {
     id: 'push',

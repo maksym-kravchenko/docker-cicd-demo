@@ -1,5 +1,3 @@
-// Brand marks from simple-icons (CC0), plus a hand-drawn compose-style stack.
-
 export function GitHubIcon(props) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>

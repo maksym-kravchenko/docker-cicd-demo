@@ -1,10 +1,8 @@
-# ---- deps stage ----
 FROM node:24-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# ---- build stage ----
 FROM node:24-alpine AS build
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -17,7 +15,6 @@ ENV APP_VERSION=$APP_VERSION
 
 RUN npm run build
 
-# ---- runtime stage ----
 FROM node:24-alpine
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
