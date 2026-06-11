@@ -1,0 +1,29 @@
+services:
+  app:
+    image: ${APP_IMAGE}:latest
+    container_name: demo-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    labels:
+      # watchtower only touches containers with this label
+      com.centurylinklabs.watchtower.enable: "true"
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_LABEL_ENABLE: "true"   # opt-in via label, don't touch other containers
+      WATCHTOWER_CLEANUP: "true"        # remove old images after update
+      WATCHTOWER_POLL_INTERVAL: "30"    # seconds; short for demo purposes
