@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>README — docker-cicd-demo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+  <style>
+    body { margin: 0; background: var(--bgColor-default, #ffffff); }
+    .markdown-body {
+      box-sizing: border-box;
+      margin: 0 auto;
+      padding: 45px;
+    }
+    @media (max-width: 767px) {
+      .markdown-body { padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <article class="markdown-body" id="content">Loading README…</article>
+  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+  <script>
+    fetch('README.md')
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
+      })
+      .then(function (md) {
+        document.getElementById('content').innerHTML = marked.parse(md, { gfm: true });
+      })
+      .catch(function (err) {
+        document.getElementById('content').textContent = 'Failed to load README.md: ' + err.message;
+      });
+  </script>
+</body>
+</html>

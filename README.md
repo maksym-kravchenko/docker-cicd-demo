@@ -21,8 +21,9 @@ push to main ──> GitHub Actions ──> test ──> build image ──> pus
 │   ├── Dockerfile              # multi-stage (deps → build → standalone runtime), non-root
 │   ├── src/                    # next.js app (animated pipeline landing page)
 │   └── test/                   # node:test, runs in CI
-├── compose.yml                 # "production": GHCR image + watchtower
-├── compose.dev.yml             # local build, offline fallback
+├── compose.yml                 # "production": GHCR image + watchtower + readme server
+├── readme-index.html           # renders this README github-style on :10000
+├── readme-server.conf          # nginx config for the readme server
 └── .env.example
 ```
 
@@ -46,6 +47,10 @@ docker compose up -d
 
 Open <http://localhost:3000> — the page footer shows the running version
 (git SHA). `curl localhost:3000/health` for the healthcheck endpoint.
+
+This README is served at <http://localhost:10000>, rendered GitHub-style by a
+small nginx container. The file is bind-mounted, so edits show up on refresh —
+no restart needed.
 
 ## Demo flow (live)
 

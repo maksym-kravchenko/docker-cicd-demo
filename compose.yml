@@ -17,6 +17,17 @@ services:
       # watchtower only touches containers with this label
       com.centurylinklabs.watchtower.enable: "true"
 
+  readme:
+    image: nginx:alpine
+    container_name: demo-readme
+    restart: unless-stopped
+    ports:
+      - "10000:80"
+    volumes:
+      - ./README.md:/usr/share/nginx/html/README.md:ro
+      - ./readme-index.html:/usr/share/nginx/html/index.html:ro
+      - ./readme-server.conf:/etc/nginx/conf.d/default.conf:ro
+
   watchtower:
     image: nickfedor/watchtower:latest
     container_name: watchtower

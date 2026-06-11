@@ -108,6 +108,10 @@ export default function Home() {
         <span>
           push a commit and watch this footer change in ~90&nbsp;seconds
         </span>
+        <span className="footer-sep">·</span>
+        <a href="http://localhost:10000" target="_blank" rel="noreferrer">
+          README
+        </a>
       </footer>
     </main>
   );
