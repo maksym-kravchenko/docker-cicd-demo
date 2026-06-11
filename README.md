@@ -1,8 +1,9 @@
 # docker-cicd-demo
 
-CI/CD pipeline: GitHub Actions builds and tests a Node/Express app, pushes the
-image to GitHub Container Registry (GHCR), and Watchtower auto-deploys it to a
-Docker Compose stack.
+CI/CD pipeline: GitHub Actions builds and tests a Node/Next.js app (a landing
+page that explains and animates this very pipeline), pushes the image to GitHub
+Container Registry (GHCR), and Watchtower auto-deploys it to a Docker Compose
+stack.
 
 ```
 push to main ──> GitHub Actions ──> test ──> build image ──> push to GHCR
@@ -17,8 +18,8 @@ push to main ──> GitHub Actions ──> test ──> build image ──> pus
 .
 ├── .github/workflows/ci.yml   # test + build + push pipeline
 ├── app/
-│   ├── Dockerfile              # multi-stage, non-root
-│   ├── src/                    # express app
+│   ├── Dockerfile              # multi-stage (deps → build → standalone runtime), non-root
+│   ├── src/                    # next.js app (animated pipeline landing page)
 │   └── test/                   # node:test, runs in CI
 ├── compose.yml                 # "production": GHCR image + watchtower
 ├── compose.dev.yml             # local build, offline fallback
@@ -41,40 +42,16 @@ push to main ──> GitHub Actions ──> test ──> build image ──> pus
 
 ```bash
 docker compose up -d
-curl localhost:3000/        # shows the running version (git SHA)
 ```
+
+Open <http://localhost:3000> — the page footer shows the running version
+(git SHA). `curl localhost:3000/health` for the healthcheck endpoint.
 
 ## Demo flow (live)
 
-1. `curl localhost:3000/` → note the `version` field (current git SHA).
-2. Change something in `app/src/app.js`, commit, push to `main`.
+1. Open <http://localhost:3000> → note the version in the footer (current git SHA).
+2. Change something in `app/src/` (e.g. a text in `src/lib/pipeline.js`),
+   commit, push to `main`.
 3. Watch the Actions run: tests → build → push (~1 min).
 4. Within 30 s Watchtower pulls the new image and restarts the container.
-5. `curl localhost:3000/` → new SHA. Pipeline proven end-to-end.
-
-## Offline fallback (if Wi-Fi/GitHub dies during the presentation)
-
-```bash
-docker compose -f compose.dev.yml up --build
-```
-
-## Local development
-
-```bash
-cd app
-npm ci
-npm test
-npm start
-```
-
-## Docker concepts demonstrated
-
-- Multi-stage build (deps stage → slim runtime stage)
-- Non-root container user
-- `.dockerignore` to minimize build context
-- Healthcheck (used by Docker to mark the container healthy/unhealthy)
-- Compose with env-based configuration (`.env`, `${VAR:-default}`)
-- Image tagging strategy: immutable `sha-<commit>` tags + moving `latest`
-- Registry auth in CI via the built-in `GITHUB_TOKEN` (no manual secrets)
-- Buildx layer caching in CI (`cache-from/to: gha`)
-- Docker socket mount tradeoff (Watchtower) — controlled via label opt-in
+5. Reload the page → new SHA in the footer. Pipeline proven end-to-end.
