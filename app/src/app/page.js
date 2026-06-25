@@ -50,7 +50,7 @@ export default function Home() {
     <main>
       <section className="hero">
         <span className="badge">
-          <span className="badge-pulse" /> live demo - this page deployed itself
+          <span className="badge-pulse" />TEST live demo - this page deployed itself
         </span>
         <h1>
           Push code.
